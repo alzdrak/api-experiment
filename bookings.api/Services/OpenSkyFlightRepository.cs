@@ -1,5 +1,6 @@
 ﻿using bookings.api.Contexts;
 using bookings.api.ExternalModels;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -22,15 +23,17 @@ namespace bookings.api.Services
     public class OpenSkyFlightRepository : IOpenSkyFlightRepository, IDisposable
     {
         private FlightBookingContext _context;
-        private IHttpClientFactory _httpClientFactory;
-        private CancellationTokenSource _cancellationTokenSource;
-
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILogger<OpenSkyFlightRepository> _logger;
+        
         public OpenSkyFlightRepository(FlightBookingContext context, 
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory httpClientFactory,
+            ILogger<OpenSkyFlightRepository> logger)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _httpClientFactory = httpClientFactory ?? 
                 throw new ArgumentNullException(nameof(httpClientFactory));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<IEnumerable<OpenSkyFlight>> GetFlightAsync(string icao24, DateTime start, DateTime end)
@@ -69,11 +72,6 @@ namespace bookings.api.Services
                     _context.Dispose();
                     _context = null;
                 }
-                if (_cancellationTokenSource != null)
-                {
-                    _cancellationTokenSource.Dispose();
-                    _cancellationTokenSource = null;
-                }
             }
         }
     }
@@ -81,7 +79,7 @@ namespace bookings.api.Services
     public interface IOpenSkyFlightRepository
     {
         /// <summary>
-        /// Get flight info
+        /// Get flight info from external api
         /// </summary>
         /// <param name="icao24">Aircraft route identifier</param>
         /// <param name="start">start time in unix ticks</param>
