@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server
+    container_name: db
+    ports: 
+      - "1431:1433"
+    environment: 
+      SA_PASSWORD: "Your_p@55w0rd"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+  bookings.api:
+    image: ${DOCKER_REGISTRY-}bookingsapi
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: bookings.api/Dockerfile

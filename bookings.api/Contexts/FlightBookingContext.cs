@@ -29,7 +29,7 @@ namespace bookings.api.Contexts
             //    entity.HasOne(b => b.Passenger).WithMany(p => p.Bookings).HasForeignKey(b => b.FlightId);
             //});
 
-            //seed
+            //seed - https://randomuser.me/
             modelBuilder.Entity<Passenger>().HasData(
                 new Passenger()
                 {
