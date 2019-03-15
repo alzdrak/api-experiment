@@ -6,14 +6,7 @@ Flight booking experiment in asp.net core web api with docker support that refer
 
 ### How to run?
 
-Use linux containers and run
-
-`docker-compose build`
-
-You should be able to access it here:
-https://localhost:44308/api/bookings
-
-or
+Use linux containers and using Docker Compose
 
 F5 in Visual Studio :)
 

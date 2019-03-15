@@ -1,15 +1,16 @@
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
+FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM microsoft/dotnet:2.1-sdk AS build
+FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
 COPY bookings.api/bookings.api.csproj bookings.api/
 RUN dotnet restore bookings.api/bookings.api.csproj
 COPY . .
 WORKDIR /src/bookings.api
 RUN dotnet build bookings.api.csproj -c Release -o /app
+RUN dotnet dev-certs https
 
 FROM build AS publish
 RUN dotnet publish bookings.api.csproj -c Release -o /app
